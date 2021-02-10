@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="https://fonts.googleapis.com/css?family=Rubik:300,400,500,700&display=swap" rel="stylesheet">
+	<title>Club map demo</title>
+	<meta property="og:title" content="title" />
+	<meta property="og:description" content="description" />
+	<meta property="og:image" content="img/nikoljsjky_uk.jpg" />
+
+<script src="https://kit.fontawesome.com/17cebd8c49.js" crossorigin="anonymous"></script>
+<script	src="https://unpkg.com/tablefilter@latest/dist/tablefilter/tablefilter.js"></script>
+<style>
+
+#map-wrapper {
+	position: relative;
+	width: 70%; /* 100 */
+	align-items: center;
+}
+#clubmap {
+	width: 100%;
+	height: auto;
+	fill: #dddddd;
+	background-image: url('img/nikoljsjky_uk.jpg');
+	background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+ /* Line is moving (.isolated is not implemented*/
+/* .isolated {
+  isolation: isolate;
+}
+.room:hover {
+  fill-opacity: .75;
+  stroke-opacity: 1;
+	opacity: 1;
+  mix-blend-mode: overlay;
+  stroke-width: 2px;
+	stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: dash 2s linear forwards;
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+} */
+
+/* Dashed border (stroke-dasharray[] sum have to be equal to stroke-dashoffset to smooth animation)*/
+.room:hover {
+  fill-opacity: .5;
+  stroke-opacity: 1;
+  opacity: 1;
+  stroke-width: 4px;
+  stroke-dasharray: 9,6;
+  -webkit-animation: dash 1s infinite linear;
+  -moz-animation: dash 1s infinite linear;
+  -o-animation: dash 1s infinite linear;
+  animation: dash 1s infinite linear;
+}
+@-webkit-keyframes dash {
+  to { stroke-dashoffset: -15; }
+}
+@-moz-keyframes dash {
+  to { stroke-dashoffset: -15; }
+}
+@-o-keyframes dash {
+  to { stroke-dashoffset: -15; }
+}
+@keyframes dash {
+  to { stroke-dashoffset: -15; }
+}
+
+.st2 { /* Dnipro-river */
+	fill: none;
+}
+.st3 { /* ORDLO line */
+	fill: none;
+	stroke:#FFFFFF;
+	stroke-width: 2;
+	stroke-miterlimit: 10;
+}
+.st4 { /* regional borders */
+	fill: none;
+	stroke: #FFFFFF;
+	stroke-width: 2;
+	stroke-linecap: round;
+}
+.st5 { /* external frontier */
+	fill: none;
+	stroke: #CCCCCC;
+	stroke-width: 12;
+}
+.st7 { /* city dot */
+	stroke: black;
+	stroke-width: 12;
+	opacity: .5;
+	stroke-opacity: .5;
+}
+.st8 {
+	fill: black;
+	font-family: Rubik, sans-serif;
+	font-size: 340px;
+}
+.total-light {
+	font-family: Rubik, sans-serif;
+	font-size: 290px;
+	font-weight: 100;
+}
+#Kyiv-city {
+	stroke: white;
+	stroke-width: 5;
+}
+#Crimea {
+	/* fill: #c9b1bb; */
+}
+#ORDLO {
+	/* fill: #c9b1bb; */
+}
+.occupied {
+	fill: #c9b1bb;
+}
+.UAT-gray {
+	fill: #B4B0A8;
+}
+.UAT-red {
+	fill: #E30613;
+}
+.UAT-black {
+	fill: #000000;
+}
+svg {
+	max-width: 100%; /*!important;*/
+	height: auto;
+	display: block;
+}
+.div-font-Rubik {
+	font-family: Rubik, sans-serif;
+	font-size: 14px;
+}
+#locale-updated {
+	display: inline-block;
+}
+#covid19-Ukraine-update {
+	font-family: Rubik, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+}
+.legend {
+	left: 20px;
+	font-family: Rubik, sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	margin-right: 30px;
+	vertical-align: top;
+	display: inline-block;
+}
+.legend-square {
+	height: 14px;
+	width: 14px;
+	margin-right: 4px;
+	display: inline-block;
+}
+.legend-circle {
+	width: 12px;
+	height: 12px;
+	border-radius: 50%;
+	margin-right: 4px;
+	display: inline-block;
+}
+#tooltip {
+	pointer-events: none;
+	position: absolute;
+	text-align: left;
+	line-height: 1.2;
+	background: #f0f0f0;
+	max-width: 12em;
+	padding: 3px 5px 5px 5px;
+	z-index: 5;
+	margin: 0 auto;
+	border-radius: 5px;
+	box-shadow: 0 0 0 2px #ffffff;
+	-moz-transform: translateX(-50%);
+	-ms-transform: translateX(-50%);
+	-webkit-transform: translateX(-50%);
+	transform: translateX(-50%);
+	display: none;
+}
+#tooltip.active {
+	display: block;
+}
+#country-name {
+	font-family: Rubik, sans-serif;
+	font-size: 14px;
+	font-weight: 500;
+}
+#info-div {
+	margin-top: 5px;
+	font-family: Rubik, sans-serif;
+	font-size: 17px;
+	font-weight: 300;
+}
+.svgicon {
+	width: auto;
+	height: 14px;
+	margin-right: 5px;
+	display: inline-block;
+}
+.legend-svgicon {
+	width: auto;
+	height: 14px;
+	margin-right: 5px;
+	display: inline-block;
+}
+.table-svgicon {
+	width: 20px;
+	display: inline-block;
+}
+.virus-suspect {
+	fill: #f9e49a;
+	background-color: #f9e49a;
+}
+.virus-suspect-1-9 {
+	fill: #f8efcb;
+	background-color: #f8efcb;
+}
+.virus-suspect-10-99 {
+	fill: #f9e49a;
+	background-color: #f9e49a;
+}
+.virus-suspect-100-999 {
+	fill: #e2c413;
+	background-color: #e2c413;
+}
+.virus-origin {
+	fill: #660000;
+	background-color: #660000;
+}
+.virus-spread {
+	fill: crimson;
+	background-color: crimson;
+}
+.virus-spread-1-9 {
+	fill: #ff9999;
+	background-color: #ff9999;
+}
+.virus-spread-10-99 {
+	fill: #ff6666;
+	background-color: #ff6666;
+}
+.virus-spread-100-999 {
+	fill: #cc3333;
+	background-color: #cc3333;
+}
+.virus-spread-1000-9999 {
+	fill: #990000;
+	background-color: #990000;
+}
+.virus-spread-10000-99999 {
+	fill: #660000;
+	background-color: #660000;
+}
+.virus-spread-100000-999999 {
+	fill: #330000;
+	background-color: #330000;
+}
+.virus-spread-1M {
+	fill: #000000;
+	background-color: #000000;
+}
+#cruise-liner:hover {
+	fill: #333333;
+}
+.hidden-object {
+	visibility: hidden;
+}
+.ascending {
+	display: inline-block !important;
+}
+.descending {
+	display: inline-block !important;
+}
+#table-wrapper * { /*CSS Reset*/
+	margin-bottom: 0;
+}
+#table-wrapper {
+	margin-left: 0%;
+	/* width: 90%; */
+	/* border: #00ff00 solid 2px; */
+	height: 0;
+	visibility: hidden !important;
+}
+.inf {
+	min-width: 100px !important;
+	border: 0;
+	border-top: 0px !important;
+	border-bottom: 0px !important;
+	border-left: 0px !important;
+	border-right: 0px !important;
+}
+#COVID19-table-Ukraine .fltrow td {
+	border-bottom: 0px !important;
+}
+#COVID19-table-Ukraine {
+	padding: 0;
+	font-family: Rubik, sans-serif;
+	width: 310px !important;
+}
+#COVID19-table-Ukraine th {
+	text-align: center;
+	font-size: 14px;
+	border: 0;
+	padding: 0;
+}
+#COVID19-table-Ukraine td:nth-child(1) {
+	text-align: left;
+	padding-left: 5px;
+	border: 0;
+}
+#COVID19-table-Ukraine th:nth-child(2), #COVID19-table-Ukraine td:nth-child(2) {
+	text-align: center;
+	border: 0;
+	padding: 0;
+	font-size: 12px;
+}
+#COVID19-table-Ukraine tr:nth-child(even) {
+	background: rgba(201, 201, 201, 0.2);
+}
+#COVID19-table-Ukraine td:nth-child(2)::first-line {
+	font-size: 14px;
+}
+#COVID19-table-Ukraine th:nth-child(3), #COVID19-table-Ukraine td:nth-child(3) {
+	text-align: center;
+	background: rgba(255, 153, 153, 0.1);
+	border: 0;
+	padding: 0;
+	font-size: 12px;
+}
+#COVID19-table-Ukraine td:nth-child(3)::first-line {
+	font-size: 14px;
+}
+#COVID19-table-Ukraine th:nth-child(4), #COVID19-table-Ukraine td:nth-child(4) {
+	text-align: center;
+	border: 0;
+	padding: 0;
+	font-size: 12px;
+}
+#COVID19-table-Ukraine td:nth-child(4)::first-line {
+	font-size: 14px;
+}
+#COVID19-table-Ukraine th:nth-child(5), #COVID19-table-Ukraine td:nth-child(5) {
+	text-align: center;
+	background: rgba(204, 204, 204, 0.1);
+	border: 0;
+	padding: 0;
+	font-size: 12px;
+}
+#COVID19-table-Ukraine td:nth-child(5)::first-line {
+	font-size: 14px;
+}
+/* #date-picker::-webkit-calendar-picker-indicator {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	width: auto;
+	height: auto;
+	color: transparent;
+	background: transparent;
+}	*/
+
+#date-picker-div {
+	/* display: none; */
+	display: inline-block;
+}
+#date-picker-label {
+	font-family: Rubik, sans-serif;
+	font-size: 14px;
+}
+#date-picker:after {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f073";
+	color: #555;
+	padding: 0 5px;
+}
+#date-picker:hover:after {
+	color: #E30613;
+}
+#date-picker {
+	position: relative;
+	cursor: pointer;
+	margin-left: 4px;
+	/* opacity: 1; */
+}
+#date-picker::-webkit-calendar-picker-indicator {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	opacity: 0;
+}
+#date-picker::-webkit-inner-spin-button {
+	-webkit-appearance: none;
+	display: none;
+}
+#date-picker:focus {
+	outline: 0; /* !important; */
+	}
+#date-picker:required {
+	box-shadow: none;
+}
+#backward-history:hover {
+	color: #E30613;
+}
+#forward-history:hover {
+	color: #E30613;
+}
+#play-history {
+	margin-left: 4px;
+}
+#play-history:hover {
+	color: #E30613;
+}
+#pause-history {
+	margin-left: 4px;
+	display: none;
+}
+#pause-history:hover {
+	color: #E30613;
+}
+
+@media screen and (max-width: 380px) {
+	.legend {
+		margin-right: 8px;
+		max-width: 100px;
+	}
+	#tooltip {
+		max-width: 6em;
+		line-height: 0.6;
+		padding: 0px 3px 3px 3px;
+		box-shadow: 0 0 0 1px #ffffff;
+		/* background-color: lightgreen; */
+	}
+	#country-name {
+		font-size: 7px;
+	}
+	#info-div {
+		margin-top: 5px;
+		font-size: 8px;
+		line-height: 1.2;
+	}
+	.svgicon {
+		height: 7px;
+		margin-right: 2px;
+	}
+	#table-wrapper {
+		margin-left: -3%;
+	}
+	#date-picker-label {
+	display: block;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div id="tooltip">
+	<span id="country-name">ID</span>
+	<div id="info-div">
+		<div id="suspect-info-div"><span id="suspect-span">—</span></div>
+		<div id="sick-info-div"><span id="sick-span">—</span></div>
+		<div id="recovered-info-div"><span id="recovered-span">—</span></div>
+		<div id="dead-info-div"><span id="dead-span">—</span></div>
+	</div>
+</div>
+
+<div id="locale-updated" class="div-font-Rubik">Club map demo&nbsp;</div><span id="covid19-Ukraine-update"></span>
+
+<div id="map-wrapper">
+	<!-- <img class="" src="img/nikoljsjky_uk.jpg" alt="Club map"> -->
+	<svg id="clubmap" viewBox="0 0 800 540" xmlns="http://www.w3.org/2000/svg">
+		<style type="text/css">
+			.room{fill:#FFFFFF;stroke-opacity:.1;fill-opacity:.1;stroke:#FF0000;stroke-miterlimit:10;}
+			.yellow {
+				fill: yellow;
+				opacity: 1;
+			}
+			.green {
+				fill: green;
+				opacity: 1;
+			}
+		</style>
+		<g id="svg">
+			<g id="5thfloor-01" class="room-group" data-ukr-name="Хол" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="452.89,437.67 452.89,444.5 467.44,449.89 479.33,431.44 479.33,421.89 467.17,416.83 476,404.22 504.44,415.67 504.44,425.67 481.11,468.89 446.33,454.33 446.33,446.56"/>
+			</g>
+			<g id="5thfloor-02" class="room-group" data-ukr-name="Рецепція" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="452.89,437.67 467.17,416.83 479.33,421.89 479.33,431.44 467.44,449.89 452.89,444.5"/>
+			</g>
+			<g id="5thfloor-03" class="room-group" data-ukr-name="Гардероб" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="401.22,392.33 431.89,405.33 431.89,414.33 420.11,430.56 389.33,417 389.33,407.67"/>
+			</g>
+			<g id="5thfloor-04" class="room-group" data-ukr-name="Клієнтський відділ" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="401.22,392.33 401.22,401.94 381.28,427.56 359.72,418.5 359.72,407.22 379.5,383.72"/>
+			</g>
+			<g id="5thfloor-05" class="room-group" data-ukr-name="Каса" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="431.89,405.33 446.33,411.61 446.33,422.67 435.93,437.61 420.11,430.56 420.11,421.33"/>
+			</g>
+			<g id="5thfloor-06" class="room-group" data-ukr-name="Вендінг автомати" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="515.78,429.25 515.69,438 513.03,442 503.44,437.95 503.44,429.53 505.94,425.12"/>
+			</g>
+			<g id="5thfloor-07" class="room-group" data-ukr-name="Дитячий клуб" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="583.44,430.44 610.67,375.44 642.89,385.89 642.89,394.44 603.89,479.22 550.22,457.89 550.22,448.67 564.78,423.44"/>
+			</g>
+			<g id="5thfloor-08" class="room-group" data-ukr-name="Навчальний клас" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="624.41,434.61 624.41,425.12 633,407.5 688.83,427.33 688.83,435.61 680.5,457.33"/>
+			</g>
+			<g id="5thfloor-09" class="room-group" data-ukr-name="Дитячий фітнес" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="624.41,425.12 680.11,447.33 680.5,457.33 663.44,503.11 603.89,479.22 603.89,470.11"/>
+			</g>
+			<g id="5thfloor-10" class="room-group" data-ukr-name="Кастелянська" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="446.33,411.61 465.22,419.67 465.15,427.28 452.89,444.5 435.93,437.61 435.93,427"/>
+			</g>
+			<g id="5thfloor-11" class="room-group" data-ukr-name="Роздягальні Ч" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="398.17,359 427.83,321.67 437.83,324.83 446.58,314.03 470.17,321.78 470.17,330.56 433.33,381.11 398.17,367.67"/>
+			</g>
+			<g id="5thfloor-12" class="room-group" data-ukr-name="Роздягальні Ж" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="610.67,375.44 610.67,384.67 583.5,440.83 564.67,433.56 561.02,439.92 509.61,418.17 509.61,408.14 542.67,352.67"/>
+			</g>
+			<g id="5thfloor-13" class="room-group" data-ukr-name="Душові Ч" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="470.17,295.92 479.83,282.92 530.92,299.5 530.92,308.5 526.49,316.1 521.79,314.58 517.17,321.67 470.17,306"/>
+			</g>
+			<g id="5thfloor-14" class="room-group" data-ukr-name="Душові Ж" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="542.67,352.67 568,309.56 586.89,315.78 586.89,324.78 563.62,369.59 542.67,362.44"/>
+			</g>
+			<g id="5thfloor-15" class="room-group" data-ukr-name="Premium роздягальні Ч" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="470.17,321.78 501.33,332.5 501.33,343.17 466.83,393.67 433.33,381.11 433.33,372.67"/>
+			</g>
+			<g id="5thfloor-16" class="room-group" data-ukr-name="Premium роздягальні Ж" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="529.5,375.44 529.5,385.04 504.44,425.67 455.25,404.22 455.25,396.42 501.33,332.5 526,341.33 508.44,367.78"/>
+			</g>
+			<g id="5thfloor-17" class="room-group" data-ukr-name="Premium душові Ч" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="501.33,332.5 512.11,317.22 537.33,325.89 537.33,335.44 525.78,352.67 501.33,343.17"/>
+			</g>
+			<g id="5thfloor-18" class="room-group" data-ukr-name="Premium  душові Ж" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="555.05,331.59 555.05,340.44 537.33,372.33 517.11,364.33 517.11,354.72 537.33,325.89"/>
+			</g>
+			<g id="5thfloor-19" class="room-group" data-ukr-name="Солярій" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room green" points="452.39,304.25 457.17,306.08 457.17,314.17 454.25,318 449,316.22 449,307.75"/>
+				<polygon class="room green" points="525.08,368.57 529.86,370.4 529.86,378.49 526.94,382.32 521.69,380.54 521.69,372.07"/>
+				<polygon class="room green" points="580.56,379.32 585.33,381.15 585.33,389.24 582.42,393.07 577.17,391.29 577.17,382.82"/>
+			</g>
+			<g id="5thfloor-20" class="room-group" data-ukr-name="Кардіотеатр" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="242,329.11 379.5,383.72 379.5,393.67 359.72,418.5 220.67,360 218.67,352.67"/>
+			</g>
+			<g id="5thfloor-21" class="room-group" data-ukr-name="Зона вантажно-блочних тренажерів" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="242,329.11 271.06,300.67 405.89,349.28 405.94,357.72 398.17,367.67 421.77,376.69 401.22,401.94 244.44,337.42"/>
+			</g>
+			<g id="5thfloor-22" class="room-group" data-ukr-name="Зона вільних ваг" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="271.06,300.67 300.22,272 410.61,312 423.33,296.89 441.56,303.33 441.56,314.03 405.94,357.72 272.89,308.22"/>
+			</g>
+			<g id="5thfloor-23" class="room-group" data-ukr-name="Зона Cross Training" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="300.22,272 352.89,217 374.67,243.56 374.67,253.78 336.67,294 300.22,280.67"/>
+			</g>
+			<g id="5thfloor-24" class="room-group" data-ukr-name="Студія сайклу" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="423.33,296.89 443.67,272 479.83,282.92 479.83,292.56 461.41,317.2 423.33,304.25"/>
+			</g>
+			<g id="5thfloor-25" class="room-group" data-ukr-name="Студія групових програм 1" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="262.89,259.78 300.22,272 300.22,280.67 220.67,360 184.44,345.56 180.44,337.44"/>
+			</g>
+			<g id="5thfloor-26" class="room-group" data-ukr-name="Студія групових програм 2" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="262.89,259.78 335.33,193.17 352.89,217 352.89,226.47 300.22,280.67 262.89,267.67"/>
+			</g>
+			<g id="5thfloor-27" class="room-group" data-ukr-name="Кабінет масажу" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="582,322.89 595.17,327.15 595.17,336.82 587.92,351.08 574.44,346.33 574.44,337"/>
+				<polygon class="room" points="595.17,327.15 610.67,332 610.67,341.5 603.42,357 587.92,351.08 587.92,342.58"/>
+			</g>
+			<g id="5thfloor-28" class="room-group" data-ukr-name="Кабінет лікаря" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="550.22,457.89 523.44,446.78 523.44,437.56 534.13,421.09 560.14,431.48 560.14,442"/>
+			</g>
+			<g id="6thfloor-01" class="room-group" data-ukr-name="Premium Кардіотеатр" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="313.33,92.67 365.11,107.56 365.11,119.78 335.11,159.78 281.11,141.33 281.11,132.89"/>
+			</g>
+			<g id="6thfloor-02" class="room-group" data-ukr-name="Premium зона вантажно-блочних тренажерів" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="313.33,92.67 313.33,103.33 294,128.22 198.89,95.11 198.89,84.67 220.44,63.78"/>
+			</g>
+			<g id="6thfloor-03" class="room-group" data-ukr-name="Premium зона вільних ваг" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="294,128.22 267.56,157.56 140,115.78 140,105.33 170.44,75.56 294.2,116.56"/>
+			</g>
+			<g id="6thfloor-04" class="room-group" data-ukr-name="Вендінг автомати" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="315.02,61.01 314.94,71.76 312.27,73.76 302.69,71.71 302.69,61.29 305.19,58.87"/>
+			</g>
+			<g id="6thfloor-05" class="room-group" data-ukr-name="Лаунж зона" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="365.11,119.78 286.17,94.5 286.17,84.22 319.83,47.33 395.33,68.83 395.33,79.33"/>
+			</g>
+			<g id="6thfloor-06" class="room-group" data-ukr-name="Руська лазня" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="265.96,77.93 279.67,65.08 299.07,70.08 299.07,81.08 286.17,94.5 265.96,88.33"/>
+			</g>
+			<g id="6thfloor-07" class="room-group" data-ukr-name="Римська лазня" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="279.67,65.08 279.67,75.56 265.96,88.33 245.17,82.08 245.17,71.47 259,59.87"/>
+			</g>
+			<g id="6thfloor-08" class="room-group" data-ukr-name="Фінська лазня" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="259,59.87 259,68.58 245.17,82.08 220.44,74.42 220.44,63.78 232.38,53.09"/>
+			</g>
+			<g id="6thfloor-09" class="room-group" data-ukr-name="Кабінет масажу" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="365.11,89.56 365.11,98.33 350.35,115.05 335.77,110.38 335.77,99.12 350.33,85.44"/>
+				<polygon class="room" points="350.33,85.44 350.33,94.92 335.77,110.38 323.11,106.33 323.11,95.48 337.16,82.04"/>
+			</g>
+			<g id="6thfloor-10" class="room-group" data-ukr-name="Басейн" data-rus-name="Бассейн" data-eng-name="Pool">
+				<polygon class="room" points="462.44,90.67 606.67,129.33 550.22,246.44 393.78,194.67"/>
+			</g>
+			<g id="6thfloor-11" class="room-group" data-ukr-name="Дитячий басейн" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="385.78,98.89 420.44,109.33 392.78,148.67 356.22,138"/>
+			</g>
+			<g id="6thfloor-12" class="room-group" data-ukr-name="Басейни для немовлят" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="352.17,143.58 387.42,154.58 375.5,173.25 340.08,160.33"/>
+			</g>
+		</g>
+		</svg>
+<br>
+
+<script>
+
+window.addEventListener("load", function() {
+
+let currentCOVID19Ukraine = Array.from(COVID19Ukraine);
+let currentHospitals = Array.from(Hospitals);
+
+let mediawidth = window.innerWidth;
+console.log('width@media = '+mediawidth);
+
+let playingTimeline;
+
+// set of global variables to reduce DOM access
+let smth;
+
+// document.getElementById("backward-history").addEventListener("click", function(){
+// 	if (document.getElementById("date-picker").value == document.getElementById("date-picker").min) {
+// 		// console.log('MIN date reached');
+// 	} else {
+// 	document.getElementById('date-picker').stepDown(1);
+// 	dateChange();
+// 	}
+// });
+// document.getElementById("forward-history").addEventListener("click", function(){
+// 	if (document.getElementById("date-picker").value == document.getElementById("date-picker").max) {
+// 		// console.log('MAX date reached');
+// 	} else {
+// document.getElementById('date-picker').stepUp(1);
+// dateChange();
+// 	}
+// });
+// document.getElementById("play-history").addEventListener("click", function(){
+// 	if (document.getElementById("date-picker").value == document.getElementById("date-picker").max) {
+// 		document.getElementById("date-picker").value = document.getElementById("date-picker").min;
+// 		dateChange();
+// 	}
+// 	document.getElementById("play-history").style.display = "none";
+// 	document.getElementById("pause-history").style.display = "inline-block";
+// 	playTimeline();
+// });
+// document.getElementById("pause-history").addEventListener("click", function(){
+// 	document.getElementById("play-history").style.display = "inline-block";
+// 	document.getElementById("pause-history").style.display = "none";
+// 	clearInterval(playingTimeline);
+// });
+// document.getElementById("date-picker").addEventListener("change", function(){
+// 	dateChange();
+// });
+
+function formatDate(date) {
+	let d = new Date(date),
+	month = '' + (d.getMonth() + 1),
+	day = '' + d.getDate(),
+	year = d.getFullYear();
+
+	if (month.length < 2)
+		month = '0' + month;
+	if (day.length < 2)
+		day = '0' + day;
+
+	return [year, month, day].join('-');
+}
+
+//set date-picker values
+// let currentDate = new Date();
+// document.getElementById("date-picker").max = formatDate(currentDate);
+// document.getElementById("date-picker").value = formatDate(currentDate);
+// let maxPlayDate = document.getElementById("date-picker").max;
+// console.log('max date: '+maxPlayDate);
+
+/* localization */
+let localizationPreset = "data-ukr-name";
+let localizationOblast = "область";
+let resetFilter = 'Очистити фільтр';
+let applyingFilter = 'Фільтруємо...';
+let noResults = 'За вашим фільтром нічого не знайдено';
+
+if (urlNowDontTch.url == '?lang=ru') {
+	localizationPreset = "data-rus-name";
+	resetFilter = 'Очистить фильтр';
+	applyingFilter = 'Фильтруем...';
+	noResults = 'По вашему фильтру ничего не найдено';
+	document.querySelector('#locale-updated').innerHTML = 'Срез данных состоянием на&nbsp;';
+	document.querySelector('#date-picker-label').innerHTML = 'Выберите дату:&nbsp;';
+	document.querySelector('#locale-spread').innerHTML = 'Подтвержденные случаи:';
+	document.querySelector('#locale-suspects').innerHTML = 'Подозреваемые случаи';
+	document.querySelector('#locale-suspect').innerHTML = 'Подозрения';
+	document.querySelector('#locale-sick').innerHTML = 'Заболели';
+	document.querySelector('#locale-healthy').innerHTML = 'Вылечились';
+	document.querySelector('#locale-dead').innerHTML = 'Умерли';
+	document.querySelector('#occupied-data').innerHTML = '* Данные из аннексированного Крыма и оккупированной части Донбасса отображаются, но не учитываются в итогах';
+	document.querySelector('#locale-region').innerHTML = 'Область/Регион';
+} else if (urlNowDontTch.url == '?lang=en') {
+	localizationPreset = "data-eng-name";
+	localizationOblast = "Oblast";
+	resetFilter = 'Reset Filter';
+	applyingFilter = 'Applying Filter...';
+	noResults = 'No Results';
+	document.querySelector('#locale-updated').innerHTML = 'Map updated:&nbsp;';
+	document.querySelector('#date-picker-label').innerHTML = 'Pick a date:&nbsp;';
+	document.querySelector('#locale-spread').innerHTML = 'Confirmed cases:';
+	document.querySelector('#locale-suspects').innerHTML = 'Suspected cases';
+	document.querySelector('#locale-suspect').innerHTML = 'Suspicion';
+	document.querySelector('#locale-sick').innerHTML = 'Infected';
+	document.querySelector('#locale-healthy').innerHTML = 'Recovered';
+	document.querySelector('#locale-dead').innerHTML = 'Died';
+	document.querySelector('#occupied-data').innerHTML = '* The data from annexed Crimea and occupied Donbas are displayed but not counted towards totals';
+	document.querySelector('#locale-region').innerHTML = 'Oblast/Region';
+}
+
+dataTableParser();
+
+//TableFilter.js
+// !!! WATCH out .inf (status/icon bar) min-width - it's 400px by default and it breaks width on mobiles (too wide)
+let compare = sorter("uk"); //language specific sorter settings (alphabet sort order)
+let tfConfig = {
+	base_path: "https://unpkg.com/tablefilter@latest/dist/tablefilter/",
+	col_types: ["ukstring", "number", "number", "number", "number"],
+	// locale: 'de', // Define default locale, default to 'en'
+	// responsive: true,
+	highlight_keywords: true,
+	auto_filter: true,
+	// rows_counter: true,
+	auto_filter_delay: 0, //milliseconds
+	mark_active_columns: { // Mark active columns
+		highlight_column: true, // .. but only the column header
+},
+	help_instructions: false,
+	// toolbar: true, // Enable toolbar component
+	btn_reset: { // Enable clear button
+		tooltip: resetFilter, //'Очистити фільтр',
+		toolbar_position: 'left',
+},
+	status_bar: { // Enable status bar UI component
+		msg_filter: applyingFilter, // Message during filtering
+		toolbar_position: 'center',
+},
+	// no_results_message: { // "No results" message
+	// 	content: noResults,
+	// },
+	// col_0: 'none',
+	col_1: 'none',
+	col_2: 'none',
+	col_3: 'none',
+	col_4: 'none',
+	// col_0: 'checklist',
+	// col_1: 'select',
+	// col_2: 'multiple',
+	// defaultColWidth: '10px',
+	col_widths: [ '140px', '50px', '50px', '50px', '50px'],
+	// alternate_rows: true,
+	// sort_filter_options_desc: [1, 2],
+	// exclude_rows: [1, 2],
+	// themes_path: 'myThemes/',
+	// themes: [{
+	// 		name: 'mytheme'
+	// 	}],
+	extensions: [
+{
+		name: "sort",
+		sort_col_at_start: [2, true],
+		on_sort_loaded: function(tf, sort) {
+		sort.addSortType("ukstring", undefined, compare);
+		}
+},
+	// {
+	// 	name: 'filtersVisibility',
+	// 	visible_at_start: true,
+	// 	enable_icon: true,
+	// 	toolbar_position: 'left'
+	// 	// title: 'Tgl',
+	// }
+	]
+};
+// let tf = new TableFilter("COVID19-table-Ukraine", tfConfig);
+// tf.init();
+
+function sorter(locale) {
+	let c = new Intl.Collator(locale);
+	return function(val1, val2) {
+	return c.compare(val1.value, val2.value);
+	}
+}
+
+function dateChange() {
+	let datePicked = document.getElementById('date-picker').value;
+	console.log('picked '+datePicked);
+	COVID19Ukraine = Timeline[datePicked];
+	Hospitals = hospitalsTimeline[datePicked];
+	if (datePicked == formatDate(currentDate)) {
+		// console.log('current date picked!');
+		COVID19Ukraine = Array.from(currentCOVID19Ukraine);
+		Hospitals = Array.from(currentHospitals);
+	}
+	dataTableParser();
+
+	//sort 2nd column descending after dateChange
+	document.getElementById("sick-th").click();
+	document.getElementById("sick-th").click();
+};
+
+function playTimeline() {
+	playingTimeline = setInterval(doTimeShift, 1500);
+};
+
+function doTimeShift() {
+	document.getElementById('date-picker').stepUp(1);
+	let dateShifted = document.getElementById('date-picker').value;
+	if (dateShifted == maxPlayDate) {
+		COVID19Ukraine = Array.from(currentCOVID19Ukraine);
+		Hospitals = Array.from(currentHospitals);
+		clearInterval(playingTimeline);
+		// console.log('Timeline stopped');
+		document.getElementById("play-history").style.display = "inline-block";
+		document.getElementById("pause-history").style.display = "none";
+	} else {
+	COVID19Ukraine = Timeline[dateShifted];
+	Hospitals = hospitalsTimeline[dateShifted];
+	// console.log(dateShifted);
+	}
+	dataTableParser();
+}
+
+function dataTableParser() {
+// Regions DATA PARSER
+console.log(COVID19Ukraine);
+
+if (Array.isArray(COVID19Ukraine) && COVID19Ukraine.length) { // array exists and is not empty
+
+console.log('%c We have '+COVID19Ukraine.length+' regional entries ', 'color: white; background-color: crimson');
+
+//clear table
+// let tableBody = document.getElementById('table-body');
+// while (tableBody.firstChild) {
+// 	tableBody.removeChild(tableBody.lastChild);
+// }
+
+for (i=0; i<= COVID19Ukraine.length-1; i++) { // data array iteration
+
+	// let tableUkraine = document.getElementById('table-body');
+	// let newRow = tableUkraine.insertRow(-1);
+
+	// let newCell_0 = newRow.insertCell(0);
+	let regionSVGElement = document.getElementById(COVID19Ukraine[i].id);
+	// let localeName = regionSVGElement.getAttribute(localizationPreset);
+	
+	// Kyiv / Kyiv-city fix (they have the same 'data-eng-name' values but different IDs)
+	// if (COVID19Ukraine[i].id == 'Kyiv-city' && localizationPreset == 'data-eng-name') {localeName = 'Kyiv City'};
+	// if (COVID19Ukraine[i].id == 'Crimea' && localizationPreset == 'data-ukr-name') {localeName = 'АР Крим (анексована РФ)*'};
+	// if (COVID19Ukraine[i].id == 'Crimea' && localizationPreset == 'data-rus-name') {localeName = 'АР Крым (аннексия РФ)*'};
+	// if (COVID19Ukraine[i].id == 'Crimea' && localizationPreset == 'data-eng-name') {localeName = 'AR Crimea (annexed by Russia)*'};
+	// if (COVID19Ukraine[i].id == 'ORDLO' && localizationPreset == 'data-ukr-name') {localeName = 'ОРДЛО (окуповані РФ)*'};
+	// if (COVID19Ukraine[i].id == 'ORDLO' && localizationPreset == 'data-rus-name') {localeName = 'ОРДЛО (оккупация РФ)*'};
+	// if (COVID19Ukraine[i].id == 'ORDLO' && localizationPreset == 'data-eng-name') {localeName = 'ORDLO (occupied by Russia)*'};
+	// let newText_0 = document.createTextNode(localeName);
+	// newCell_0.appendChild(newText_0);
+
+	// let newCell_1 = newRow.insertCell(1);
+	// if (!COVID19Ukraine[i].suspect_c == '') {
+	// 	newCell_1.innerHTML = COVID19Ukraine[i].suspect+'<br>'+COVID19Ukraine[i].suspect_c;
+	// } else {
+	// 	newCell_1.innerHTML = COVID19Ukraine[i].suspect;
+	// }
+
+	// let newCell_2 = newRow.insertCell(2);
+	// if (!COVID19Ukraine[i].sick_c == '') {
+	// 	newCell_2.innerHTML = COVID19Ukraine[i].sick+'<br>'+COVID19Ukraine[i].sick_c;
+	// } else {
+	// 	newCell_2.innerHTML = COVID19Ukraine[i].sick;
+	// }
+
+	// let newCell_3 = newRow.insertCell(3);
+	// if (!COVID19Ukraine[i].recovered_c == '') {
+	// 	newCell_3.innerHTML = COVID19Ukraine[i].recovered+'<br>'+COVID19Ukraine[i].recovered_c;
+	// } else {
+	// 	newCell_3.innerHTML = COVID19Ukraine[i].recovered;
+	// }
+
+	// let newCell_4 = newRow.insertCell(4);
+	// if (!COVID19Ukraine[i].dead_c == '') {
+	// 	newCell_4.innerHTML = COVID19Ukraine[i].dead+'<br>'+COVID19Ukraine[i].dead_c;
+	// } else {
+	// 	newCell_4.innerHTML = COVID19Ukraine[i].dead;
+	// }
+
+	// RegEx find & replace CROPPED
+
+	// Source data id adjustements CROPPED
+
+	// if (COVID19Ukraine[i].id == 'totalNumbers') {
+	// 	document.querySelector('#total-suspect').innerHTML = COVID19Ukraine[i].suspect;
+	// 	document.querySelector('#total-sick').innerHTML = COVID19Ukraine[i].sick;
+	// 	document.querySelector('#total-recovered').innerHTML = COVID19Ukraine[i].recovered;
+	// 	document.querySelector('#total-dead').innerHTML = COVID19Ukraine[i].dead;
+
+	// 	// change append 
+	// 	if (!COVID19Ukraine[i].suspect_c == '') {
+	// 		let totalNumber = document.querySelector('#total-suspect');
+	// 		let newElement = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+	// 		newElement.classList.add('total-light');
+	// 		newElement.innerHTML = COVID19Ukraine[i].suspect_c;
+	// 		totalNumber.appendChild(newElement); 
+	// 	}
+	// 	if (!COVID19Ukraine[i].sick_c == '') {
+	// 		let totalNumber = document.querySelector('#total-sick');
+	// 		let newElement = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+	// 		newElement.classList.add('total-light');
+	// 		newElement.innerHTML = COVID19Ukraine[i].sick_c;
+	// 		totalNumber.appendChild(newElement); 
+	// 	}
+	// 	if (!COVID19Ukraine[i].recovered_c == '') {
+	// 		let totalNumber = document.querySelector('#total-recovered');
+	// 		let newElement = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+	// 		newElement.classList.add('total-light');
+	// 		newElement.innerHTML = COVID19Ukraine[i].recovered_c;
+	// 		totalNumber.appendChild(newElement); 
+	// 	}
+	// 	if (!COVID19Ukraine[i].dead_c == '') {
+	// 		let totalNumber = document.querySelector('#total-dead');
+	// 		let newElement = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+	// 		newElement.classList.add('total-light');
+	// 		newElement.innerHTML = COVID19Ukraine[i].dead_c;
+	// 		totalNumber.appendChild(newElement); 
+	// 	}
+	// }
+
+	// China + Hong Kong + Macao (snippet CROPPED)
+
+	// set new data for each cointry
+	let focusedCountry = document.getElementById(COVID19Ukraine[i].id);
+
+	if (focusedCountry == null) {
+		if (COVID19Ukraine[i].id == 'Hong_Kong' || COVID19Ukraine[i].id == 'total') {
+			//do nothing to report here
+		} else {
+			console.log(COVID19Ukraine[i].id+' not exist on this map');
+		}
+	} else {
+	if (focusedCountry.classList.contains('virus-suspect-1-9')) { focusedCountry.classList.remove('virus-suspect-1-9'); }
+	if (focusedCountry.classList.contains('virus-suspect-10-99')) { focusedCountry.classList.remove('virus-suspect-10-99'); }
+	if (focusedCountry.classList.contains('virus-suspect-100-999')) { focusedCountry.classList.remove('virus-suspect-100-999'); }
+	if (focusedCountry.classList.contains('virus-spread')) { focusedCountry.classList.remove('virus-spread'); }
+	if (focusedCountry.classList.contains('virus-spread-1-9')) { focusedCountry.classList.remove('virus-spread-1-9'); }
+	if (focusedCountry.classList.contains('virus-spread-10-99')) { focusedCountry.classList.remove('virus-spread-10-99'); }
+	if (focusedCountry.classList.contains('virus-spread-100-999')) { focusedCountry.classList.remove('virus-spread-100-999'); }
+	if (focusedCountry.classList.contains('virus-spread-1000-9999')) { focusedCountry.classList.remove('virus-spread-1000-9999'); }
+	if (focusedCountry.classList.contains('virus-spread-10000-99999')) { focusedCountry.classList.remove('virus-spread-10000-99999'); }
+
+	if (COVID19Ukraine[i].suspect >= 1 && COVID19Ukraine[i].suspect <=9 && COVID19Ukraine[i].sick == 0) { focusedCountry.classList.add('virus-suspect-1-9'); }
+	if (COVID19Ukraine[i].suspect >= 10 && COVID19Ukraine[i].suspect <=99 && COVID19Ukraine[i].sick == 0) { focusedCountry.classList.add('virus-suspect-10-99'); }
+	if (COVID19Ukraine[i].suspect >= 100 && COVID19Ukraine[i].suspect <=999 && COVID19Ukraine[i].sick == 0) { focusedCountry.classList.add('virus-suspect-100-999'); }
+
+	if (COVID19Ukraine[i].sick >= 1 && COVID19Ukraine[i].sick <=9) { focusedCountry.classList.add('virus-spread-1-9'); }
+	if (COVID19Ukraine[i].sick >= 10 && COVID19Ukraine[i].sick <=99) { focusedCountry.classList.add('virus-spread-10-99'); }
+	if (COVID19Ukraine[i].sick >= 100 && COVID19Ukraine[i].sick <=999) { focusedCountry.classList.add('virus-spread-100-999'); }
+	if (COVID19Ukraine[i].sick >= 1000 && COVID19Ukraine[i].sick <=9999) { focusedCountry.classList.add('virus-spread-1000-9999'); }
+	if (COVID19Ukraine[i].sick >= 10000 && COVID19Ukraine[i].sick <= 99999) { focusedCountry.classList.add('virus-spread-10000-99999'); }
+	if (COVID19Ukraine[i].sick >= 100000 && COVID19Ukraine[i].sick <= 999999) { focusedCountry.classList.add('virus-spread-100000-999999'); }
+	if (COVID19Ukraine[i].sick >= 1000000) { focusedCountry.classList.add('virus-spread-1M'); }
+
+	// new empty '' data fixer !CHECK if we can return numeric zeros
+	if (COVID19Ukraine[i].suspect == '') { focusedCountry.setAttribute('data-suspect-count', '0'); }
+	else { focusedCountry.setAttribute('data-suspect-count', COVID19Ukraine[i].suspect); }
+	if (COVID19Ukraine[i].sick == '') { focusedCountry.setAttribute('data-sick-count', '0'); }
+	else { focusedCountry.setAttribute('data-sick-count', COVID19Ukraine[i].sick); }
+	if (COVID19Ukraine[i].recovered == '') { focusedCountry.setAttribute('data-recovered-count', '0'); }
+	else { focusedCountry.setAttribute('data-recovered-count', COVID19Ukraine[i].recovered); }
+	if (COVID19Ukraine[i].dead == '') { focusedCountry.setAttribute('data-dead-count', '0'); }
+	else { focusedCountry.setAttribute('data-dead-count', COVID19Ukraine[i].dead); }
+
+	// change append
+	if (!COVID19Ukraine[i].suspect_c == '') {
+		let totalDataSet = focusedCountry.getAttribute('data-suspect-count');
+		focusedCountry.setAttribute('data-suspect-count', COVID19Ukraine[i].suspect+COVID19Ukraine[i].suspect_c); 
+	}
+	if (!COVID19Ukraine[i].sick_c == '') {
+		let totalDataSet = focusedCountry.getAttribute('data-sick-count');
+		focusedCountry.setAttribute('data-sick-count', COVID19Ukraine[i].sick+COVID19Ukraine[i].sick_c); 
+	}
+	if (!COVID19Ukraine[i].recovered_c == '') {
+		let totalDataSet = focusedCountry.getAttribute('data-recovered-count');
+		focusedCountry.setAttribute('data-recovered-count', COVID19Ukraine[i].recovered+COVID19Ukraine[i].recovered_c); 
+	}
+	if (!COVID19Ukraine[i].dead_c == '') {
+		let totalDataSet = focusedCountry.getAttribute('data-dead-count');
+		focusedCountry.setAttribute('data-dead-count', COVID19Ukraine[i].dead+COVID19Ukraine[i].dead_c); 
+	}
+
+	}
+	// console.log(focusedCountry);
+} // end of Regions data array iteration
+
+} else {
+	console.log('%c Regions data array is empty. Parser is OFF ', 'color: black; background-color: orange');
+} // end of Regions DATA PARSER
+
+
+// Hospitals DATA PARSER
+console.log(Hospitals);
+if (Array.isArray(Hospitals) && Hospitals.length) { // array exists and is not empty
+
+console.log('%c We have '+Hospitals.length+' hospital entries ', 'color: white; background-color: crimson');
+
+// ? MOVE to date-picker funcs ?
+let allHospitals = document.querySelectorAll('.hospital');
+for (let i = 0; i < allHospitals.length; i++) {
+	allHospitals[i].classList.add('hidden-object');
+};
+
+for (i=0; i<= Hospitals.length-1; i++) { // data array iteration
+
+	// RegEx find & replace
+	if (Hospitals[i].suspect == '') {Hospitals[i].suspect = 0;}
+	if (Hospitals[i].sick == '') {Hospitals[i].sick = 0;}
+
+	// set new data for each cointry
+	let focusedHospital = document.getElementById(Hospitals[i].id);
+	// console.log(Hospitals[i].id);
+
+	if (focusedHospital == null) {
+		if (Hospitals[i].id == 'Hong_Kong' || Hospitals[i].id == 'total') {
+			//do nothing to report here
+		} else {
+			// console.log('Hospital ID not exist on this map');
+			// console.log('Hospital ID: '+Hospitals[i].id+' not exist on this map');
+			if (Hospitals[i].sick > 1) {
+				console.log('Unmarked Hospital ID: '+Hospitals[i].id+' has '+Hospitals[i].sick+' patients with COVID-19');
+			}
+		}
+	} else {
+	// parsing here
+	focusedHospital.classList.remove('hidden-object');
+
+	if (focusedHospital.classList.contains('virus-suspect-1-9')) { focusedHospital.classList.remove('virus-suspect-1-9'); }
+	if (focusedHospital.classList.contains('virus-suspect-10-99')) { focusedHospital.classList.remove('virus-suspect-10-99'); }
+	if (focusedHospital.classList.contains('virus-suspect-100-999')) { focusedHospital.classList.remove('virus-suspect-100-999'); }
+	if (focusedHospital.classList.contains('virus-spread')) { focusedHospital.classList.remove('virus-spread'); }
+	if (focusedHospital.classList.contains('virus-spread-1-9')) { focusedHospital.classList.remove('virus-spread-1-9'); }
+	if (focusedHospital.classList.contains('virus-spread-10-99')) { focusedHospital.classList.remove('virus-spread-10-99'); }
+	if (focusedHospital.classList.contains('virus-spread-100-999')) { focusedHospital.classList.remove('virus-spread-100-999'); }
+	if (focusedHospital.classList.contains('virus-spread-1000-9999')) { focusedHospital.classList.remove('virus-spread-1000-9999'); }
+	if (focusedHospital.classList.contains('virus-spread-10000-99999')) { focusedHospital.classList.remove('virus-spread-10000-99999'); }
+
+	if (Hospitals[i].suspect >= 1 && Hospitals[i].suspect <=9 && Hospitals[i].sick == 0) { focusedHospital.classList.add('virus-suspect-1-9'); }
+	if (Hospitals[i].suspect >= 10 && Hospitals[i].suspect <=99 && Hospitals[i].sick == 0) { focusedHospital.classList.add('virus-suspect-10-99'); }
+	if (Hospitals[i].suspect >= 100 && Hospitals[i].suspect <=999 && Hospitals[i].sick == 0) { focusedHospital.classList.add('virus-suspect-100-999'); }
+
+	if (Hospitals[i].sick >= 1 && Hospitals[i].sick <= 9) { focusedHospital.classList.add('virus-spread-1-9'); }
+	if (Hospitals[i].sick >= 10 && Hospitals[i].sick <= 99) { focusedHospital.classList.add('virus-spread-10-99'); }
+	if (Hospitals[i].sick >= 100 && Hospitals[i].sick <= 999) { focusedHospital.classList.add('virus-spread-100-999'); }
+	if (Hospitals[i].sick >= 1000 && Hospitals[i].sick <= 9999) { focusedHospital.classList.add('virus-spread-1000-9999'); }
+	if (Hospitals[i].sick >= 10000 && Hospitals[i].sick <= 99999) { focusedHospital.classList.add('virus-spread-10000-99999'); }
+	if (Hospitals[i].sick >= 100000 && Hospitals[i].sick <= 999999) { focusedHospital.classList.add('virus-spread-100000-999999'); }
+	if (Hospitals[i].sick >= 1000000) { focusedHospital.classList.add('virus-spread-1M'); }
+
+	focusedHospital.setAttribute('data-suspect-count', Hospitals[i].suspect);
+	focusedHospital.setAttribute('data-sick-count', Hospitals[i].sick);
+	// focusedHospital.setAttribute('data-recovered-count', Hospitals[i].recovered);
+	// focusedHospital.setAttribute('data-dead-count', Hospitals[i].dead);
+	}
+	// console.log(focusedHospital);
+} // end of Hospitals data array iteration
+
+} else {
+	console.log('%c Hospitals data array is empty. Parser is OFF ', 'color: black; background-color: orange');
+} // end of Hospitals DATA PARSER
+
+document.querySelector('#covid19-Ukraine-update').innerHTML = COVID19UkraineUpd;
+let bodyBody = document.body;
+let bodyFirstChild = bodyBody.firstChild;
+let movingTooltip = document.getElementById('tooltip');
+
+bodyBody.insertBefore(movingTooltip, bodyFirstChild);
+
+objToolTip = document.getElementById('tooltip');
+
+let countries = document.querySelectorAll('.room-group');
+countries.forEach(el => el.addEventListener('mouseover', countryHover));
+countries.forEach(el => el.addEventListener('mouseout', countryOut));
+
+function countryHover() {
+	objToolTip.classList.add('active');
+
+	document.getElementById('info-div').style.display = 'block';
+	document.getElementById('recovered-info-div').style.display = 'block';
+	document.getElementById('dead-info-div').style.display = 'block';
+		// console.log(this);
+		// console.log(this.getAttribute('data-ukr-name'));
+		// this.classList.add('room-hovered');
+	document.getElementById('country-name').textContent=this.dataset.ukrName; // localizationPreset (here was localisation preset)
+	if (this.classList.contains('oblast')) {
+	document.getElementById('country-name').innerHTML += '<br>'+localizationOblast;
+	}
+	document.getElementById('suspect-span').textContent=(this.dataset.suspectCount);
+	document.getElementById('sick-span').textContent=(this.dataset.sickCount);
+	document.getElementById('recovered-span').textContent=(this.dataset.recoveredCount);
+	document.getElementById('dead-span').textContent=(this.dataset.deadCount);
+
+	// Disable info numbers for some classes
+	// if (this.classList.contains('virus-suspect-1-9')) {
+	// 	document.getElementById('info-div').style.display = 'none';
+	// }
+	if (this.classList.contains('hospital')) {
+		document.getElementById('recovered-info-div').style.display = 'none';
+		document.getElementById('dead-info-div').style.display = 'none';
+	}
+};
+
+function countryOut() {
+	objToolTip.classList.remove('active');
+}
+
+document.getElementById('clubmap').onmousemove = function(e) {
+
+	let rect = this.getBoundingClientRect();
+
+	// console.log('e.pageX='+e.pageX);
+	let tooltipDiv = document.getElementById('tooltip');
+	let positionInfo = tooltipDiv.getBoundingClientRect();
+	let tooltipWidth = positionInfo.width;
+
+	// Tooltip X coord calculation
+	if ((e.pageX - tooltipWidth/2) < 0) {
+	// console.log('out of LEFT border !');
+	objToolTip.style.left = parseInt(e.pageX + (tooltipWidth/2 - e.pageX)) + 'px';
+	} else {
+	objToolTip.style.left = parseInt(e.pageX) + 'px';
+	}
+
+	// Tooltip Y coord calculation
+	if (window.matchMedia('(max-width: 380px)').matches) {
+	// console.log('me small <380');
+	objToolTip.style.top = parseInt(e.pageY - 25) + 'px';
+	} else { 
+	// // console.log('me large');
+	objToolTip.style.top = parseInt(e.pageY + 25) + 'px';
+	};
+};
+// }); //end of old event onload scope 
+
+}; // end of dateTableParse()
+
+}); // end of on.load function
+</script>
+
+
+
+
+<script>
+window.urlNowDontTch = {
+	url: '' //'?lang=en'
+};
+	console.log('urlNowDontTch.url = '+urlNowDontTch.url);
+
+// hospitalsTimeline 1-21.03 from Tableau, from 22.03 = 23.03 etc. one day shift
+let COVID19UkraineUpd = "11.02.2021, 11:53 (UTC+2)";
+let COVID19Ukraine = [];
+let Hospitals = [];
+
+</script>
+
+
+
+</body>
+</html>
