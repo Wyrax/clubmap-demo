@@ -28,6 +28,10 @@
   background-size: cover;
 }
 
+.tooltip-pic {
+	width: 100%;
+}
+
  /* Line is moving (.isolated is not implemented*/
 /* .isolated {
   isolation: isolate;
@@ -181,7 +185,7 @@ svg {
 	line-height: 1.2;
 	background: #f0f0f0;
 	max-width: 12em;
-	padding: 3px 5px 5px 5px;
+	padding: 6px 10px 1px 10px;
 	z-index: 5;
 	margin: 0 auto;
 	border-radius: 5px;
@@ -197,7 +201,7 @@ svg {
 }
 #country-name {
 	font-family: Rubik, sans-serif;
-	font-size: 14px;
+	font-size: 18px;
 	font-weight: 500;
 }
 #info-div {
@@ -437,6 +441,9 @@ svg {
 }
 
 @media screen and (max-width: 380px) {
+  #map-wrapper {
+	width: 100%; /* 70 */
+  }
 	.legend {
 		margin-right: 8px;
 		max-width: 100px;
@@ -476,6 +483,7 @@ svg {
 <body>
 
 <div id="tooltip">
+	<div id="pic"></div>
 	<span id="country-name">ID</span>
 	<div id="info-div">
 		<div id="suspect-info-div"><span id="suspect-span">—</span></div>
@@ -517,16 +525,14 @@ svg {
 			<g id="5thfloor-05" class="room-group" data-ukr-name="Каса" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="431.89,405.33 446.33,411.61 446.33,422.67 435.93,437.61 420.11,430.56 420.11,421.33"/>
 			</g>
-			<g id="5thfloor-06" class="room-group" data-ukr-name="Вендінг автомати" data-rus-name="___" data-eng-name="ENG">
-				<polygon class="room" points="515.78,429.25 515.69,438 513.03,442 503.44,437.95 503.44,429.53 505.94,425.12"/>
-			</g>
+			
 			<g id="5thfloor-07" class="room-group" data-ukr-name="Дитячий клуб" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="583.44,430.44 610.67,375.44 642.89,385.89 642.89,394.44 603.89,479.22 550.22,457.89 550.22,448.67 564.78,423.44"/>
 			</g>
 			<g id="5thfloor-08" class="room-group" data-ukr-name="Навчальний клас" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="624.41,434.61 624.41,425.12 633,407.5 688.83,427.33 688.83,435.61 680.5,457.33"/>
 			</g>
-			<g id="5thfloor-09" class="room-group" data-ukr-name="Дитячий фітнес" data-rus-name="___" data-eng-name="ENG">
+			<g id="5thfloor-09" class="room-group" data-pic="kid-club.gif" data-ukr-name="Дитячий фітнес" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="624.41,425.12 680.11,447.33 680.5,457.33 663.44,503.11 603.89,479.22 603.89,470.11"/>
 			</g>
 			<g id="5thfloor-10" class="room-group" data-ukr-name="Кастелянська" data-rus-name="___" data-eng-name="ENG">
@@ -556,18 +562,13 @@ svg {
 			<g id="5thfloor-18" class="room-group" data-ukr-name="Premium  душові Ж" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="555.05,331.59 555.05,340.44 537.33,372.33 517.11,364.33 517.11,354.72 537.33,325.89"/>
 			</g>
-			<g id="5thfloor-19" class="room-group" data-ukr-name="Солярій" data-rus-name="___" data-eng-name="ENG">
-				<polygon class="room green" points="452.39,304.25 457.17,306.08 457.17,314.17 454.25,318 449,316.22 449,307.75"/>
-				<polygon class="room green" points="525.08,368.57 529.86,370.4 529.86,378.49 526.94,382.32 521.69,380.54 521.69,372.07"/>
-				<polygon class="room green" points="580.56,379.32 585.33,381.15 585.33,389.24 582.42,393.07 577.17,391.29 577.17,382.82"/>
-			</g>
-			<g id="5thfloor-20" class="room-group" data-ukr-name="Кардіотеатр" data-rus-name="___" data-eng-name="ENG">
+			<g id="5thfloor-20" class="room-group" data-pic="planet-fitness-launch.gif" data-ukr-name="Кардіотеатр" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="242,329.11 379.5,383.72 379.5,393.67 359.72,418.5 220.67,360 218.67,352.67"/>
 			</g>
 			<g id="5thfloor-21" class="room-group" data-ukr-name="Зона вантажно-блочних тренажерів" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="242,329.11 271.06,300.67 405.89,349.28 405.94,357.72 398.17,367.67 421.77,376.69 401.22,401.94 244.44,337.42"/>
 			</g>
-			<g id="5thfloor-22" class="room-group" data-ukr-name="Зона вільних ваг" data-rus-name="___" data-eng-name="ENG">
+			<g id="5thfloor-22" class="room-group" data-pic="dumbbells.gif" data-ukr-name="Зона вільних ваг" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="271.06,300.67 300.22,272 410.61,312 423.33,296.89 441.56,303.33 441.56,314.03 405.94,357.72 272.89,308.22"/>
 			</g>
 			<g id="5thfloor-23" class="room-group" data-ukr-name="Зона Cross Training" data-rus-name="___" data-eng-name="ENG">
@@ -579,28 +580,34 @@ svg {
 			<g id="5thfloor-25" class="room-group" data-ukr-name="Студія групових програм 1" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="262.89,259.78 300.22,272 300.22,280.67 220.67,360 184.44,345.56 180.44,337.44"/>
 			</g>
-			<g id="5thfloor-26" class="room-group" data-ukr-name="Студія групових програм 2" data-rus-name="___" data-eng-name="ENG">
+			<g id="5thfloor-26" class="room-group" data-pic="group-training-joke.gif" data-ukr-name="Студія групових програм 2" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="262.89,259.78 335.33,193.17 352.89,217 352.89,226.47 300.22,280.67 262.89,267.67"/>
 			</g>
-			<g id="5thfloor-27" class="room-group" data-ukr-name="Кабінет масажу" data-rus-name="___" data-eng-name="ENG">
+			<g id="5thfloor-27" class="room-group" data-pic="massage.gif" data-ukr-name="Кабінет масажу" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="582,322.89 595.17,327.15 595.17,336.82 587.92,351.08 574.44,346.33 574.44,337"/>
 				<polygon class="room" points="595.17,327.15 610.67,332 610.67,341.5 603.42,357 587.92,351.08 587.92,342.58"/>
 			</g>
 			<g id="5thfloor-28" class="room-group" data-ukr-name="Кабінет лікаря" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="550.22,457.89 523.44,446.78 523.44,437.56 534.13,421.09 560.14,431.48 560.14,442"/>
 			</g>
-			<g id="6thfloor-01" class="room-group" data-ukr-name="Premium Кардіотеатр" data-rus-name="___" data-eng-name="ENG">
+      <g id="5thfloor-06" class="room-group" data-pic="vending-drink.gif" data-ukr-name="Вендінг автомати" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="515.78,429.25 515.69,438 513.03,442 503.44,437.95 503.44,429.53 505.94,425.12"/>
+			</g>
+      <g id="5thfloor-19" class="room-group" data-ukr-name="Солярій" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="452.39,304.25 457.17,306.08 457.17,314.17 454.25,318 449,316.22 449,307.75"/>
+				<polygon class="room" points="525.08,368.57 529.86,370.4 529.86,378.49 526.94,382.32 521.69,380.54 521.69,372.07"/>
+				<polygon class="room" points="580.56,379.32 585.33,381.15 585.33,389.24 582.42,393.07 577.17,391.29 577.17,382.82"/>
+			</g>
+			<g id="6thfloor-01" class="room-group" data-pic="cardio-dance.gif" data-ukr-name="Premium Кардіотеатр" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="313.33,92.67 365.11,107.56 365.11,119.78 335.11,159.78 281.11,141.33 281.11,132.89"/>
 			</g>
 			<g id="6thfloor-02" class="room-group" data-ukr-name="Premium зона вантажно-блочних тренажерів" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="313.33,92.67 313.33,103.33 294,128.22 198.89,95.11 198.89,84.67 220.44,63.78"/>
 			</g>
-			<g id="6thfloor-03" class="room-group" data-ukr-name="Premium зона вільних ваг" data-rus-name="___" data-eng-name="ENG">
+			<g id="6thfloor-03" class="room-group" data-pic="dumbbells.gif" data-ukr-name="Premium зона вільних ваг" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="294,128.22 267.56,157.56 140,115.78 140,105.33 170.44,75.56 294.2,116.56"/>
 			</g>
-			<g id="6thfloor-04" class="room-group" data-ukr-name="Вендінг автомати" data-rus-name="___" data-eng-name="ENG">
-				<polygon class="room" points="315.02,61.01 314.94,71.76 312.27,73.76 302.69,71.71 302.69,61.29 305.19,58.87"/>
-			</g>
+			
 			<g id="6thfloor-05" class="room-group" data-ukr-name="Лаунж зона" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="365.11,119.78 286.17,94.5 286.17,84.22 319.83,47.33 395.33,68.83 395.33,79.33"/>
 			</g>
@@ -613,18 +620,22 @@ svg {
 			<g id="6thfloor-08" class="room-group" data-ukr-name="Фінська лазня" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="259,59.87 259,68.58 245.17,82.08 220.44,74.42 220.44,63.78 232.38,53.09"/>
 			</g>
-			<g id="6thfloor-09" class="room-group" data-ukr-name="Кабінет масажу" data-rus-name="___" data-eng-name="ENG">
+			<g id="6thfloor-09" class="room-group" data-pic="massage.gif" data-ukr-name="Кабінет масажу" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="365.11,89.56 365.11,98.33 350.35,115.05 335.77,110.38 335.77,99.12 350.33,85.44"/>
 				<polygon class="room" points="350.33,85.44 350.33,94.92 335.77,110.38 323.11,106.33 323.11,95.48 337.16,82.04"/>
 			</g>
-			<g id="6thfloor-10" class="room-group" data-ukr-name="Басейн" data-rus-name="Бассейн" data-eng-name="Pool">
+			<g id="6thfloor-10" class="room-group" data-pic="pool-swimmer.gif" data-ukr-name="Басейн" data-rus-name="Бассейн" data-eng-name="Pool">
 				<polygon class="room" points="462.44,90.67 606.67,129.33 550.22,246.44 393.78,194.67"/>
 			</g>
-			<g id="6thfloor-11" class="room-group" data-ukr-name="Дитячий басейн" data-rus-name="___" data-eng-name="ENG">
+			<g id="6thfloor-11" class="room-group" data-pic="kids-pool.gif" data-ukr-name="Дитячий басейн" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="385.78,98.89 420.44,109.33 392.78,148.67 356.22,138"/>
 			</g>
-			<g id="6thfloor-12" class="room-group" data-ukr-name="Басейни для немовлят" data-rus-name="___" data-eng-name="ENG">
+			<g id="6thfloor-12" class="room-group" data-pic="swimming-baby.gif" data-ukr-name="Басейни для немовлят" data-rus-name="___" data-eng-name="ENG">
 				<polygon class="room" points="352.17,143.58 387.42,154.58 375.5,173.25 340.08,160.33"/>
+			</g>
+      <g id="6thfloor-04" class="room-group" data-pic="vending-drink.gif" data-ukr-name="Вендінг автомати" data-rus-name="___" data-eng-name="ENG">
+				<polygon class="room" points="315.02,61.01 314.94,71.76 312.27,73.76 302.69,71.71 302.69,61.29 305.19,58.87"/>
+        <polygon class="room" points="239 122.25 245.67 116.56 249.83 118.17 249.83 128.83 243.42 135.17 239 133.5 239 122.25"/>
 			</g>
 		</g>
 		</svg>
@@ -1116,9 +1127,17 @@ function countryHover() {
 	document.getElementById('info-div').style.display = 'block';
 	document.getElementById('recovered-info-div').style.display = 'block';
 	document.getElementById('dead-info-div').style.display = 'block';
-		// console.log(this);
+		console.log(this.dataset.pic);
 		// console.log(this.getAttribute('data-ukr-name'));
 		// this.classList.add('room-hovered');
+	
+		/* pic */
+	if (this.dataset.pic) {
+		document.getElementById('pic').innerHTML = `<img class="tooltip-pic" src="gif/${this.dataset.pic}">`;
+	} else {
+		document.getElementById('pic').innerHTML = '';
+	}
+
 	document.getElementById('country-name').textContent=this.dataset.ukrName; // localizationPreset (here was localisation preset)
 	if (this.classList.contains('oblast')) {
 	document.getElementById('country-name').innerHTML += '<br>'+localizationOblast;
