@@ -57,7 +57,7 @@
 } */
 
 /* Dashed border (stroke-dasharray[] sum have to be equal to stroke-dashoffset to smooth animation)*/
-.room:hover {
+/* .room:hover {
   fill-opacity: .5;
   stroke-opacity: 1;
   opacity: 1;
@@ -79,7 +79,7 @@
 }
 @keyframes dash {
   to { stroke-dashoffset: -15; }
-}
+} */
 
 .st2 { /* Dnipro-river */
 	fill: none;
@@ -641,6 +641,8 @@ svg {
 		</svg>
 <br>
 
+35 || 59, 1136
+
 <script>
 
 window.addEventListener("load", function() {
@@ -1132,11 +1134,11 @@ function countryHover() {
 		// this.classList.add('room-hovered');
 	
 		/* pic */
-	if (this.dataset.pic) {
-		document.getElementById('pic').innerHTML = `<img class="tooltip-pic" src="gif/${this.dataset.pic}">`;
-	} else {
-		document.getElementById('pic').innerHTML = '';
-	}
+	// if (this.dataset.pic) {
+	// 	document.getElementById('pic').innerHTML = `<img class="tooltip-pic" src="gif/${this.dataset.pic}">`;
+	// } else {
+	// 	document.getElementById('pic').innerHTML = '';
+	// }
 
 	document.getElementById('country-name').textContent=this.dataset.ukrName; // localizationPreset (here was localisation preset)
 	if (this.classList.contains('oblast')) {
